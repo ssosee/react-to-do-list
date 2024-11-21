@@ -2,52 +2,59 @@ import "./App.css";
 import Header from "./components/Header.jsx";
 import List from "./components/List.jsx";
 import Editor from "./components/Editor.jsx";
+import "./index.css";
+
 import { useRef, useState } from "react";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const id = useRef(0);
+  const todoIdRef = useRef(0);
 
-  const createTodo = (contents) => {
-    return {
-      id: id.current++,
-      contents,
-      date: new Date().getTime(),
-      isDone: false,
-    };
-  };
-
-  const addTodo = (contents) => {
+  const createContents = (contents) => {
     setTodos((prevTodos) => {
-      return [...prevTodos, createTodo(contents)];
+      return [
+        ...prevTodos,
+        {
+          id: todoIdRef.current++,
+          contents: contents,
+          isCompleted: false,
+          date: new Date().getTime(),
+        },
+      ];
     });
   };
 
   const deleteTodo = (id) => {
-    setTodos((prevTodos) => {
-      return prevTodos.filter((todo) => todo.id !== id);
-    });
+    setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== id));
   };
 
-  const onUpdate = (id) => {
+  const completeTodo = (id) => {
     setTodos((prevTodos) => {
-      return prevTodos.map((todo) => {
-        if (todo.id === id) {
+      return prevTodos.map((prevTodo) => {
+        if (prevTodo.id === id) {
           return {
-            ...todo,
-            isDone: !todo.isDone,
+            ...prevTodo,
+            isCompleted: !prevTodo.isCompleted,
           };
         }
-        return todo;
+        return prevTodo;
       });
     });
   };
 
   return (
-    <div className={"App"}>
-      <Header></Header>
-      <Editor addTodo={addTodo}></Editor>
-      <List todos={todos} deleteTodo={deleteTodo} onUpdate={onUpdate}></List>
+    <div className="min-h-screen bg-gradient-to-br from-purple-400 to-indigo-600 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-auto overflow-hidden">
+        <div className="max-w-3xl mx-auto">
+          <Header />
+          <Editor createContents={createContents} />
+          <List
+            todos={todos}
+            deleteTodo={deleteTodo}
+            completeTodo={completeTodo}
+          />
+        </div>
+      </div>
     </div>
   );
 }

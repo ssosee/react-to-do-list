@@ -1,28 +1,42 @@
 import React from "react";
 
-const TodoItem = ({ todo, deleteTodo, onUpdate }) => {
-  const { id, contents, date, isDone } = todo;
+const TodoItem = ({ todo, deleteTodo, completeTodo }) => {
+  const { id, contents, isCompleted, date } = todo;
 
-  const onDeleteTodo = () => {
+  const handleOnClick = () => {
     deleteTodo(id);
   };
 
-  const onCheck = () => {
-    onUpdate(id);
+  const handleOnCheck = () => {
+    completeTodo(id);
   };
 
   return (
-    <div>
-      <input type={"checkbox"} checked={isDone} onChange={onCheck} />
-      <div
-        style={{
-          textDecoration: isDone ? "line-through" : "none",
-        }}
-      >
-        {contents}
+    <div className="flex items-center p-3 bg-gray-50 rounded-md shadow-sm transition duration-300 ease-in-out hover:shadow-md">
+      <input
+        type="checkbox"
+        checked={isCompleted}
+        onChange={handleOnCheck}
+        className="mr-3 h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+      />
+      <div className="flex-grow">
+        <div className="text-sm text-gray-500">
+          {new Date(date).toLocaleString("ko-KR")}
+        </div>
+        <div
+          className={`text-lg ${
+            isCompleted ? "line-through text-gray-400" : "text-gray-800"
+          }`}
+        >
+          {contents}
+        </div>
       </div>
-      <div>{new Date(date).toLocaleDateString()}</div>
-      <button onClick={onDeleteTodo}>삭제</button>
+      <button
+        onClick={handleOnClick}
+        className="ml-2 px-2 py-1 text-sm text-red-600 hover:bg-red-100 rounded transition duration-300 ease-in-out"
+      >
+        삭제
+      </button>
     </div>
   );
 };
