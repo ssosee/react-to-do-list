@@ -4,41 +4,53 @@ import List from "./components/List.jsx";
 import Editor from "./components/Editor.jsx";
 import "./index.css";
 
-import { useRef, useState } from "react";
+import { useReducer, useRef } from "react";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "CREATE":
+      return [...state, action.data];
+    case "DELETE":
+      return state.filter((todo) => todo.id !== action.data);
+    case "COMPLETE":
+      return state.map((todo) => {
+        if (todo.id === action.data) {
+          todo.isCompleted = !todo.isCompleted;
+        }
+        return todo;
+      });
+    default:
+      return state;
+  }
+}
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, dispatch] = useReducer(reducer, []);
   const todoIdRef = useRef(0);
 
   const createContents = (contents) => {
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          id: todoIdRef.current++,
-          contents: contents,
-          isCompleted: false,
-          date: new Date().getTime(),
-        },
-      ];
+    dispatch({
+      type: "CREATE",
+      data: {
+        id: todoIdRef.current++,
+        contents: contents,
+        isCompleted: false,
+        date: new Date().getTime(),
+      },
     });
   };
 
   const deleteTodo = (id) => {
-    setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== id));
+    dispatch({
+      type: "DELETE",
+      data: id,
+    });
   };
 
   const completeTodo = (id) => {
-    setTodos((prevTodos) => {
-      return prevTodos.map((prevTodo) => {
-        if (prevTodo.id === id) {
-          return {
-            ...prevTodo,
-            isCompleted: !prevTodo.isCompleted,
-          };
-        }
-        return prevTodo;
-      });
+    dispatch({
+      type: "COMPLETE",
+      data: id,
     });
   };
 

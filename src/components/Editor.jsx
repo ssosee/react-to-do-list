@@ -9,7 +9,6 @@ const Editor = ({ createContents }) => {
   };
 
   const handleOnClick = () => {
-    console.log(contents);
     if (contents === "") {
       contentsRef.current.focus();
       return;
