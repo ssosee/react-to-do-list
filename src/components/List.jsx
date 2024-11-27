@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import TodoItem from "./TodoItem.jsx";
 
 const List = ({ todos, deleteTodo, completeTodo }) => {
@@ -8,11 +8,11 @@ const List = ({ todos, deleteTodo, completeTodo }) => {
     setSearch((prevSearch) => e.target.value);
   };
 
-  const findTodos = () => {
+  const findTodos = useCallback(() => {
     return todos.filter((todo) =>
       todo.contents.toLowerCase().includes(search.toLowerCase()),
     );
-  };
+  }, [todos, search]);
 
   return (
     <div className="p-4">

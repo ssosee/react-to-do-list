@@ -4,7 +4,7 @@ import List from "./components/List.jsx";
 import Editor from "./components/Editor.jsx";
 import "./index.css";
 
-import { useReducer, useRef } from "react";
+import { useCallback, useReducer, useRef } from "react";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -15,7 +15,7 @@ function reducer(state, action) {
     case "COMPLETE":
       return state.map((todo) => {
         if (todo.id === action.data) {
-          todo.isCompleted = !todo.isCompleted;
+          return { ...todo, isCompleted: !todo.isCompleted };
         }
         return todo;
       });
@@ -28,7 +28,7 @@ function App() {
   const [todos, dispatch] = useReducer(reducer, []);
   const todoIdRef = useRef(0);
 
-  const createContents = (contents) => {
+  const createContents = useCallback((contents) => {
     dispatch({
       type: "CREATE",
       data: {
@@ -38,21 +38,21 @@ function App() {
         date: new Date().getTime(),
       },
     });
-  };
+  }, []);
 
-  const deleteTodo = (id) => {
+  const deleteTodo = useCallback((id) => {
     dispatch({
       type: "DELETE",
       data: id,
     });
-  };
+  }, []);
 
-  const completeTodo = (id) => {
+  const completeTodo = useCallback((id) => {
     dispatch({
       type: "COMPLETE",
       data: id,
     });
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-400 to-blue-700 flex items-center justify-center p-4">

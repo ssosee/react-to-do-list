@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const TodoItem = ({ todo, deleteTodo, completeTodo }) => {
   const { id, contents, isCompleted, date } = todo;
@@ -41,4 +41,5 @@ const TodoItem = ({ todo, deleteTodo, completeTodo }) => {
   );
 };
 
-export default TodoItem;
+// 고차 컴포넌트
+export default memo(TodoItem);
