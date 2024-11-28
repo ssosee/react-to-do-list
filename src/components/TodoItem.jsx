@@ -1,6 +1,8 @@
-import React, { memo } from "react";
+import React, { memo, useContext } from "react";
+import { TodoDispatchContext } from "../App.jsx";
 
-const TodoItem = ({ todo, deleteTodo, completeTodo }) => {
+const TodoItem = ({ todo }) => {
+  const { deleteTodo, completeTodo } = useContext(TodoDispatchContext);
   const { id, contents, isCompleted, date } = todo;
 
   const handleOnClick = () => {

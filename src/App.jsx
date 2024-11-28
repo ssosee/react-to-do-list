@@ -4,7 +4,7 @@ import List from "./components/List.jsx";
 import Editor from "./components/Editor.jsx";
 import "./index.css";
 
-import { useCallback, useReducer, useRef } from "react";
+import { createContext, useCallback, useMemo, useReducer, useRef } from "react";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -24,11 +24,14 @@ function reducer(state, action) {
   }
 }
 
+export const TodoStateContext = createContext();
+export const TodoDispatchContext = createContext();
+
 function App() {
   const [todos, dispatch] = useReducer(reducer, []);
   const todoIdRef = useRef(0);
 
-  const createContents = useCallback((contents) => {
+  const createTodo = useCallback((contents) => {
     dispatch({
       type: "CREATE",
       data: {
@@ -54,17 +57,26 @@ function App() {
     });
   }, []);
 
+  // onMount 일때만 실행
+  const memoizeDispatch = useMemo(() => {
+    return {
+      createTodo,
+      deleteTodo,
+      completeTodo,
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-400 to-blue-700 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-auto overflow-hidden">
         <div className="max-w-3xl mx-auto">
           <Header />
-          <Editor createContents={createContents} />
-          <List
-            todos={todos}
-            deleteTodo={deleteTodo}
-            completeTodo={completeTodo}
-          />
+          <TodoStateContext.Provider value={todos}>
+            <TodoDispatchContext.Provider value={memoizeDispatch}>
+              <Editor />
+              <List />
+            </TodoDispatchContext.Provider>
+          </TodoStateContext.Provider>
         </div>
       </div>
     </div>

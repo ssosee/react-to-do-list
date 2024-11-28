@@ -1,7 +1,9 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import TodoItem from "./TodoItem.jsx";
+import { TodoStateContext } from "../App.jsx";
 
-const List = ({ todos, deleteTodo, completeTodo }) => {
+const List = () => {
+  const todos = useContext(TodoStateContext);
   const [search, setSearch] = React.useState("");
 
   const handleOnChange = (e) => {
@@ -25,12 +27,7 @@ const List = ({ todos, deleteTodo, completeTodo }) => {
       />
       <div className="space-y-2">
         {findTodos().map((todo) => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            deleteTodo={deleteTodo}
-            completeTodo={completeTodo}
-          />
+          <TodoItem key={todo.id} todo={todo} />
         ))}
       </div>
     </div>

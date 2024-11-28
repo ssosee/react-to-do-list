@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
+import { TodoDispatchContext } from "../App.jsx";
 
-const Editor = ({ createContents }) => {
+const Editor = () => {
+  const { createTodo } = React.useContext(TodoDispatchContext);
   const [contents, setContent] = React.useState("");
   const contentsRef = useRef();
 
@@ -13,7 +15,7 @@ const Editor = ({ createContents }) => {
       contentsRef.current.focus();
       return;
     }
-    createContents(contents);
+    createTodo(contents);
     setContent((prevState) => "");
   };
 
