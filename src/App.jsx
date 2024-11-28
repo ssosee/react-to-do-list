@@ -4,7 +4,14 @@ import List from "./components/List.jsx";
 import Editor from "./components/Editor.jsx";
 import "./index.css";
 
-import { createContext, useCallback, useMemo, useReducer, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from "react";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -19,6 +26,8 @@ function reducer(state, action) {
         }
         return todo;
       });
+    case "LOAD":
+      return action.data;
     default:
       return state;
   }
@@ -30,6 +39,24 @@ export const TodoDispatchContext = createContext();
 function App() {
   const [todos, dispatch] = useReducer(reducer, []);
   const todoIdRef = useRef(0);
+
+  // Load todos from localStorage on mount
+  useEffect(() => {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      const parsedTodos = JSON.parse(savedTodos);
+      dispatch({ type: "LOAD", data: parsedTodos });
+      // Update the ref to prevent ID collision
+      todoIdRef.current = parsedTodos.length
+        ? Math.max(...parsedTodos.map((todo) => todo.id)) + 1
+        : 0;
+    }
+  }, []);
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const createTodo = useCallback((contents) => {
     dispatch({
