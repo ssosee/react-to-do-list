@@ -1,20 +1,31 @@
 import React, { useCallback, useContext, useMemo } from "react";
 import TodoItem from "./TodoItem.jsx";
-import { TodoStateContext } from "../App.jsx";
+import { TodoStateContext, TodoDispatchContext } from "../App.jsx";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const List = () => {
   const todos = useContext(TodoStateContext);
+  const { reorderTodo } = useContext(TodoDispatchContext);
   const [search, setSearch] = React.useState("");
 
   const handleOnChange = (e) => {
-    setSearch((prevSearch) => e.target.value);
+    setSearch(e.target.value);
   };
 
-  const findTodos = useCallback(() => {
+  const filteredTodos = useMemo(() => {
     return todos.filter((todo) =>
       todo.contents.toLowerCase().includes(search.toLowerCase()),
     );
   }, [todos, search]);
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+
+    reorderTodo(sourceIndex, destinationIndex);
+  };
 
   return (
     <div className="p-4">
@@ -25,11 +36,36 @@ const List = () => {
         onChange={handleOnChange}
         value={search}
       />
-      <div className="space-y-2">
-        {findTodos().map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
-        ))}
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="todoList">
+          {(provided) => (
+            <div
+              className="space-y-2"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {filteredTodos.map((todo, index) => (
+                <Draggable
+                  key={todo.id}
+                  draggableId={`${todo.id}`}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <TodoItem todo={todo} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };

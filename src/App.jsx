@@ -28,6 +28,12 @@ function reducer(state, action) {
       });
     case "LOAD":
       return action.data;
+    case "REORDER": {
+      const newTodos = [...state];
+      const [movedItem] = newTodos.splice(action.from, 1);
+      newTodos.splice(action.to, 0, movedItem);
+      return newTodos;
+    }
     default:
       return state;
   }
@@ -84,12 +90,21 @@ function App() {
     });
   }, []);
 
+  const reorderTodo = useCallback((fromIndex, toIndex) => {
+    dispatch({
+      type: "REORDER",
+      from: fromIndex,
+      to: toIndex,
+    });
+  }, []);
+
   // onMount 일때만 실행
   const memoizeDispatch = useMemo(() => {
     return {
       createTodo,
       deleteTodo,
       completeTodo,
+      reorderTodo,
     };
   }, []);
 
