@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import TodoItem from "./TodoItem.jsx";
 import { TodoStateContext, TodoDispatchContext } from "../App.jsx";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
