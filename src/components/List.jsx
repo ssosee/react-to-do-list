@@ -5,7 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const List = () => {
   const todos = useContext(TodoStateContext);
-  const { reorderTodo } = useContext(TodoDispatchContext);
+  const { reorderTodo, clearTodos } = useContext(TodoDispatchContext);
   const [search, setSearch] = React.useState("");
 
   const handleOnChange = (e) => {
@@ -29,7 +29,20 @@ const List = () => {
 
   return (
     <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">힘을 빼야할 목록 👀</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold">힘을 빼야할 목록 👀</h3>
+        <button
+          onClick={clearTodos}
+          disabled={todos.length === 0}
+          className={`px-3 py-2 rounded transition ${
+            todos.length === 0
+              ? "bg-gray-300 cursor-not-allowed text-gray-600"
+              : "bg-red-500 text-white hover:bg-red-600"
+          }`}
+        >
+          전체 삭제
+        </button>
+      </div>
       <input
         className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
         placeholder="검색어를 입력하세요."
