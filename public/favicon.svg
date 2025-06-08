@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+    <rect width="128" height="128" rx="40" fill="#58c2f8"/>
+    <text x="30%" y="50%" text-anchor="middle" font-size="65" font-family="Arial, sans-serif" fill="black" font-weight="bold">
+        to
+    </text>
+    <text x="48%" y="70%" text-anchor="middle" font-size="65" font-family="Arial, sans-serif" fill="yellow" font-weight="bold">
+        do
+    </text>
+    <text x="65%" y="85%" text-anchor="middle" font-size="45" font-family="Arial, sans-serif" fill="red" font-weight="bold">
+        App
+    </text>
+</svg>
