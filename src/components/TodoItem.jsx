@@ -57,7 +57,7 @@ const TodoItem = ({ todo }) => {
       />
       <div className="flex-grow">
         <div className="text-sm text-gray-500">
-          {new Date(date).toLocaleString("ko-KR").slice(11)}
+          {new Date(date).toLocaleString("ko-KR").slice(12, 21)}
         </div>
         {isEditing ? (
           <input
